@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const TaskFlowApp());
 }
 
+// Configuración principal de la aplicación
 class TaskFlowApp extends StatelessWidget {
   const TaskFlowApp({super.key});
 
@@ -14,130 +14,107 @@ class TaskFlowApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TaskFlow',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      home: const TaskListScreen(),
     );
   }
 }
 
-// Widget con estado
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+// Modelo de datos de una tarea
+class Task {
+  const Task({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.priority,
+    required this.isCompleted,
+  });
 
-  @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  final int id;
+  final String title;
+  final String description;
+  final String priority;
+  final bool isCompleted;
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  final String studentName = 'Estefanía Solórzano';
-  final String courseName = 'Desarrollo de aplicaciones móviles';
+// Cinco tareas locales del proyecto TaskFlow
+const demoTasks = [
+  Task(
+    id: 1,
+    title: 'Revisar actividades académicas',
+    description: 'Organizar las tareas pendientes de la semana',
+    priority: 'Alta',
+    isCompleted: false,
+  ),
+  Task(
+    id: 2,
+    title: 'Estudiar Flutter y Dart',
+    description: 'Practicar widgets y componentes reutilizables',
+    priority: 'Alta',
+    isCompleted: false,
+  ),
+  Task(
+    id: 3,
+    title: 'Completar la sesión 2',
+    description: 'Implementar el contador interactivo',
+    priority: 'Media',
+    isCompleted: true,
+  ),
+  Task(
+    id: 4,
+    title: 'Preparar evidencias',
+    description: 'Capturar el funcionamiento de TaskFlow',
+    priority: 'Media',
+    isCompleted: false,
+  ),
+  Task(
+    id: 5,
+    title: 'Revisar y subir el proyecto',
+    description: 'Verificar el código y actualizar GitHub',
+    priority: 'Baja',
+    isCompleted: false,
+  ),
+];
 
-  final String motivationalMessage =
-      '¡Cada tarea completada es un paso más hacia tus metas!';
+// Tarjeta reutilizable
+class TaskCard extends StatelessWidget {
+  const TaskCard({super.key, required this.task});
 
-  // Variable que cambiará durante la ejecución
-  int pendingTasks = 3;
+  final Task task;
 
-  // Disminuir tareas pendientes
-  void completeTask() {
-    if (pendingTasks == 0) return;
-
-    setState(() {
-      pendingTasks--;
-    });
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: Icon(
+          task.isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+          color: task.isCompleted ? Colors.green : null,
+        ),
+        title: Text(task.title),
+        subtitle: Text('${task.priority} · ${task.description}'),
+        trailing: const Icon(Icons.chevron_right),
+      ),
+    );
   }
+}
 
-  // Aumentar tareas pendientes
-  void addTask() {
-    setState(() {
-      pendingTasks++;
-    });
-  }
+// Pantalla principal con lista de tareas
+class TaskListScreen extends StatelessWidget {
+  const TaskListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('TaskFlow'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(
-              Icons.task_alt,
-              size: 56,
-              color: Colors.indigo,
-            ),
-
-            const SizedBox(height: 24),
-
-            Text(
-              '¡Hola, $studentName!',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-
-            const SizedBox(height: 12),
-
-            Text(
-              motivationalMessage,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.indigo,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Text('Bienvenido/a a $courseName.'),
-
-            const SizedBox(height: 32),
-
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    const Icon(Icons.pending_actions),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Tareas pendientes: $pendingTasks',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Botones para actualizar el estado
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: completeTask,
-                  icon: const Icon(Icons.remove),
-                  label: const Text('Completar'),
-                ),
-
-                const SizedBox(width: 12),
-
-                ElevatedButton.icon(
-                  onPressed: addTask,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Agregar'),
-                ),
-              ],
-            ),
-          ],
-        ),
+      appBar: AppBar(title: const Text('Mis tareas'), centerTitle: true),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: demoTasks.length,
+        itemBuilder: (context, index) {
+          final task = demoTasks[index];
+          return TaskCard(task: task);
+        },
       ),
     );
   }
