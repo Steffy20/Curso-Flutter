@@ -115,7 +115,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             // Botones para actualizar el estado
             Row(
