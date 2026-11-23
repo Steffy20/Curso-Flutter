@@ -56,3 +56,11 @@ DELETE /tasks/:id eliminar tarea
 
 La API concreta se elegirá después. Estas rutas son requisitos, no
 direcciones de un servidor ya conectado.
+
+## API de tareas
+
+- **URL exacta consultada:** `https://jsonplaceholder.typicode.com/todos?userId=2`
+- **Parámetro `userId` elegido:** `9` (filtra únicamente las tareas pertenecientes al usuario 9 de JSONPlaceholder).
+- **Campos que llegan desde la API:** `userId` (entero), `id` (entero), `title` (texto) y `completed` (booleano).
+- **Valores que TaskFlow completa por defecto:** Como la API pública no envía descripción ni nivel de importancia, `Task.fromJson` asigna por defecto una descripción estándar (por ejemplo, `'Sin descripción'` o generada desde la API) y una prioridad predeterminada (`'Media'`), además de mapear el campo `completed` hacia `isCompleted`.
+- **Persistencia local temporal:** Marcar o desmarcar una tarea como completada (`save`) actualiza únicamente la copia en memoria dentro de `RemoteTaskRepository`; todavía no se envían peticiones `PUT`/`PATCH` al servidor remoto, por lo que al recargar los datos desde la API vuelven a su estado original.
