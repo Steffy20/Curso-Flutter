@@ -64,3 +64,19 @@ direcciones de un servidor ya conectado.
 - **Campos que llegan desde la API:** `userId` (entero), `id` (entero), `title` (texto) y `completed` (booleano).
 - **Valores que TaskFlow completa por defecto:** Como la API pública no envía descripción ni nivel de importancia, `Task.fromJson` asigna por defecto una descripción estándar (por ejemplo, `'Sin descripción'` o generada desde la API) y una prioridad predeterminada (`'Media'`), además de mapear el campo `completed` hacia `isCompleted`.
 - **Persistencia local temporal:** Marcar o desmarcar una tarea como completada (`save`) actualiza únicamente la copia en memoria dentro de `RemoteTaskRepository`; todavía no se envían peticiones `PUT`/`PATCH` al servidor remoto, por lo que al recargar los datos desde la API vuelven a su estado original.
+
+
+# TaskFlow · Gestión de Estado Asíncrono
+
+## Arquitectura y Estado Asíncrono
+- **Estado centralizado (`ChangeNotifier`):** Gestiona los estados de la petición remota (carga, éxito, vacío y error), la lista de tareas y la tarea seleccionada para el detalle.
+- **Lectura reactiva (`context.watch`):** Escucha los cambios del `ChangeNotifier` en la interfaz para renderizar el indicador de carga, la lista remota, el estado vacío con **Actualizar** o el estado de error con **Reintentar**.
+- **Acciones sin reconstrucción innecesaria (`context.read`):** Dispara operaciones como cargar/actualizar tareas, reintentar tras un fallo o abrir el detalle de una tarea desde eventos de usuario (`onPressed`, `onTap`).
+
+## Comandos de Verificación
+Antes de probar y subir el avance, se ejecutaron:
+
+```bash
+dart format lib
+flutter analyze
+flutter run
