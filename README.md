@@ -80,3 +80,19 @@ Antes de probar y subir el avance, se ejecutaron:
 dart format lib
 flutter analyze
 flutter run
+
+
+## Formulario de Nueva Tarea (`TaskFormScreen` y Ruta `/new`)
+
+- **Ruta y navegación:** Se declaró la ruta `/new` en `appRouter` (`lib/app/taskflow_app.dart`) apuntando a `TaskFormScreen` (`lib/features/tasks/presentation/task_form_screen.dart`) y se abrió desde `TaskListScreen` mediante el `FloatingActionButton` (`context.push<TaskDraft>('/new')`)[cite: 2, 3, 4].
+- **Validación y campos:** Incluye `Form` con `GlobalKey<FormState>`, controladores de texto (`TextEditingController`) para título y descripción, mensajes de validación personalizados, selector de prioridad y selector de fecha opcional con `showDatePicker` (sin exigir la fecha para guardar)[cite: 2, 5].
+- **Retorno de borrador:** Al guardar con datos válidos, se devuelve un `TaskDraft` con `context.pop(draft)` y `TaskListScreen` muestra el `SnackBar` `Formulario válido: <título>` (sin afirmar creación en servidor remoto)[cite: 2, 4].
+
+### Evidencias del formulario
+
+1. **Errores de validación:** Se intentó guardar el formulario con campos vacíos o inválidos para comprobar los mensajes de error bajo cada campo.
+   - Captura: `![Errores de validación](evidencias/07_form_errores.png)`
+2. **Formulario válido:** Se completaron título, descripción, prioridad y fecha opcional con `showDatePicker` (verificando también que guarda sin fecha).
+   - Captura: `![Formulario válido](evidencias/08_form_valido.png)`
+3. **Mensaje de retorno:** Al confirmar el formulario válido, se regresó a `TaskListScreen` y se capturó el `SnackBar` de retorno.
+   - Captura: `![Mensaje de retorno](evidencias/09_form_retorno.png)`
